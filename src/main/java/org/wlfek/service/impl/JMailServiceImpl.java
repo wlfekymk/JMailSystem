@@ -12,6 +12,7 @@ import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.UIDFolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,28 @@ public class JMailServiceImpl implements JMailService{
 			logger.error(e.getMessage());
 		}
 		return imapFolder;
+	}
+
+	
+	
+	
+	@Override
+	public void getFolderUids(String fullFolderName) throws Exception {
+		UIDFolder uids = null;
+		try{
+			uids = (UIDFolder) store.getFolder(fullFolderName);
+			
+		}catch(Exception e){
+			
+		}
+		
+		
+	}
+
+	@Override
+	public IMAPFolder getFolder(String fullFolderName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

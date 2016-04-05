@@ -23,6 +23,8 @@ public interface JMailService {
 	 */
 	public IMAPFolder[] getFolderList(Store store) throws Exception;
 	
+	public IMAPFolder getFolder(String fullFolderName) throws Exception;
+	
 	/**
 	 * IMAP 요청 하는 폴더명에 대한 폴더 메시지
 	 * @param folderName
@@ -30,6 +32,9 @@ public interface JMailService {
 	 * @throws Exception
 	 */
 	public IMAPFolder getMessageList(String fullFolderName) throws Exception;
+	
+	public void getFolderUids(String fullFolderName) throws Exception;
+
 	
 
 }
