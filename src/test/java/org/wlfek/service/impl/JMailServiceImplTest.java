@@ -25,7 +25,7 @@ public class JMailServiceImplTest {
 	public void init() throws Exception{
 		jMailService = new JMailServiceImpl();
 		id = "wlfekymk@gmail.com";
-		password = "@dlfhdia33@";
+		password = "xxxxxxx";
 //		jMailService.getConnection(id, password);
 	}
 	
