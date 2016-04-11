@@ -1,97 +1,64 @@
 package org.wlfek.service.impl;
 
-import javax.mail.Address;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Part;
 import javax.mail.Store;
-import javax.mail.UIDFolder;
-import javax.mail.internet.MimeBodyPart;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
+
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sun.mail.imap.IMAPFolder;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = JMailServiceImpl.class)
 public class JMailServiceImplTest {
 	
+	@Autowired
 	private JMailServiceImpl jMailService;
 	private String id;
 	private String password;
 	
 	@Before
 	public void init() throws Exception{
-		jMailService = new JMailServiceImpl();
 		id = "wlfekymk@gmail.com";
-		password = "xxxxxxx";
-//		jMailService.getConnection(id, password);
-	}
-	
-	//@Test
-	public void getConnectionTest() throws Exception{
+		password = "@dlfhdia33@";
 		jMailService.getConnection(id, password);
 	}
 	
-	//@Test
-	public void getFolderList() throws Exception{
-		Store store = jMailService.getConnection(id, password);
-		IMAPFolder[] imapFolders = jMailService.getFolderList(store);
-		
-		for(IMAPFolder imapFolder : imapFolders){
-			System.out.println(imapFolder.getFullName());
+	@Test
+	public void getFolderListTest() throws Exception{
+		String[] checkString = {"INBOX", "Junk", "Personal", "Receipts", "Sent", "Travel", "Unwanted", "Work", "[Gmail]", "[Gmail]/별표편지함",
+				"[Gmail]/보낸편지함", "[Gmail]/스팸함", "[Gmail]/임시보관함", "[Gmail]/전체보관함", "[Gmail]/중요", "[Gmail]/휴지통"  };
+		String[] result = null;
+		IMAPFolder[] imapFolders = null;
+		imapFolders = jMailService.getFolderList();
+		result = new String[imapFolders.length];
+
+		for(int i = 0 ; i < imapFolders.length; i++){
+			result[i] = imapFolders[i].getFullName();
 		}
+		
+		assertArrayEquals(checkString, result);
+
 	}
 	
-	@Test 
-	public void 메시지Uids만뽑기() throws Exception{
-		Store store = jMailService.getConnection(id, password);
-		UIDFolder uidFolder = jMailService.getMessageList("[Gmail]/별표편지함");
+	
+	@Test
+	public void getFolderUidsTest(){
 		
-		System.out.println(uidFolder.getUIDValidity());
-	}
-
-	//@Test
-	public void getMessageListForFullFolderName() throws Exception{
-		Store store = jMailService.getConnection(id, password);
-		IMAPFolder imapFolder = jMailService.getMessageList("[Gmail]/별표편지함");
-		
-//		System.out.println(imapFolder.getMessageCount());
-//		System.out.println(imapFolder.getNewMessageCount());
-		Message[] messages = imapFolder.getMessages();
-//		Message message = imapFolder.getMessage(5);
-//		System.out.println(message.getSubject());
-		for(Message message: messages){
-//			
-//			message.get
-//			UIDFolder uf = (UIDFolder) imapFolder;
-//			long uid = uf.getUID(message);
-//			System.out.println("uid : " + uid);
+		try {
+			jMailService.getFolderUids("");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-//		Message message = imapFolder.getMessageByUID(arg0)
 		
-		//Message message = imapFolder.getMessageByUID(2);
-//		System.out.println(message.getSubject());
-		for(Message message : messages){
-			
-			System.out.println(message.getSubject());
-//			System.out.println(message.getMessageNumber());
-//			System.out.println(message.getContentType());
-			Address[] addresss = message.getFrom();
-			for(Address address : addresss){
-				System.out.println(address.toString());
-			}
-//						
-//			Part part = (Part) message.getContent();
-//			System.out.println(part.getContentType());
-//		}
-//		
-		}
 		
 	}
 	
-
-
 	
+		
 }

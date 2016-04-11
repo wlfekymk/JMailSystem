@@ -7,13 +7,12 @@ import com.sun.mail.imap.IMAPFolder;
 public interface JMailService {
 	
 	/**
-	 * IMAP Connection 객체
+	 * Connection 객체 생성
 	 * @param id
 	 * @param password
-	 * @return
 	 * @throws Exception
 	 */
-	public Store getConnection(String id, String password) throws Exception;
+	public void getConnection(String id, String password) throws Exception;
 	
 	/**
 	 * IMAP 전체 폴더
@@ -21,8 +20,14 @@ public interface JMailService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IMAPFolder[] getFolderList(Store store) throws Exception;
+	public IMAPFolder[] getFolderList() throws Exception;
 	
+	/**
+	 *
+	 * @param fullFolderName
+	 * @return
+	 * @throws Exception
+	 */
 	public IMAPFolder getFolder(String fullFolderName) throws Exception;
 	
 	/**

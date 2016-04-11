@@ -9,6 +9,7 @@ package org.wlfek.service.impl;
 import java.util.Properties;
 
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -35,7 +36,7 @@ public class JMailServiceImpl implements JMailService{
 	private static Store store;
 	
 	@Override
-	public Store getConnection(String id, String password) throws Exception {
+	public void getConnection(String id, String password) throws Exception {
 		logger.debug("IMAP Connection Start");
 		Properties properties = new Properties();
 		properties = System.getProperties();
@@ -57,12 +58,11 @@ public class JMailServiceImpl implements JMailService{
 			logger.error(e.getMessage());
 			try { store.close();} 
 			catch (MessagingException e1) {}
-		} 
-		return store;
+		}
 	}
 
 	@Override
-	public IMAPFolder[] getFolderList(Store store) throws Exception{
+	public IMAPFolder[] getFolderList() throws Exception{
 		
 		IMAPFolder[] imapFolders = null;
 		try {
@@ -84,21 +84,16 @@ public class JMailServiceImpl implements JMailService{
 		}
 		return imapFolder;
 	}
-
-	
-	
 	
 	@Override
 	public void getFolderUids(String fullFolderName) throws Exception {
-		UIDFolder uids = null;
-		try{
-			uids = (UIDFolder) store.getFolder(fullFolderName);
-			
-		}catch(Exception e){
-			
+		IMAPFolder imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
+		Message[] messages = imapFolder.getMessages();
+		for(Message message: messages){
+			UIDFolder uf = (UIDFolder) imapFolder;
+			long uid = uf.getUID(message);
+			System.out.println("UID : " + uid );
 		}
-		
-		
 	}
 
 	@Override
