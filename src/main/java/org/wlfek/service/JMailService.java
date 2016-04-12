@@ -48,6 +48,14 @@ public interface JMailService {
 	 */
 	public List<Long> getFolderUids(String fullFolderName);
 
+	/**
+	 * 
+	 * @param fullFolderName
+	 * @param uid
+	 * @return
+	 */
+	public boolean deleteMessage(String fullFolderName, long uids[]);
 	
+	public boolean setSeenFlag(String fullFolderName, boolean seenFlag, long uids[]);
 
 }

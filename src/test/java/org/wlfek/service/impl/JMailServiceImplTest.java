@@ -32,7 +32,7 @@ public class JMailServiceImplTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void getFolderListTest() {
 		String[] checkString = {"INBOX", "[Gmail]", "[Gmail]/별표편지함", "[Gmail]/보낸편지함", "[Gmail]/스팸함",
 				"[Gmail]/임시보관함", "[Gmail]/전체보관함", "[Gmail]/중요", "[Gmail]/휴지통"};
@@ -50,10 +50,28 @@ public class JMailServiceImplTest {
 	@Test
 	public void getFolderUidsTest() {
 		fullFolderName = "[Gmail]/별표편지함"; 
-		List<Long> checkList = Arrays.asList((long)1, (long)2, (long)3);
+		List<Long> checkList = Arrays.asList((long)2, (long)3, (long) 6);
 		List<Long> result = null; 
 		result = jMailService.getFolderUids(fullFolderName);
 		assertEquals(checkList, result);	
+	}
+	
+	//@Test
+	public void getMessageTest() {
+		fullFolderName = "[Gmail]/별표편지함";
+		jMailService.getMessageList(fullFolderName);
+	}
+	
+	//@Test
+	public void deleteMessageTest(){
+		fullFolderName = "[Gmail]/별표편지함";
+		long[] uids = { 6 }; 
+		boolean result = jMailService.deleteMessage(fullFolderName, uids);
+		assertTrue(result);
+	}
+	
+	public void setSeenFlag(){
+		
 	}
 		
 }

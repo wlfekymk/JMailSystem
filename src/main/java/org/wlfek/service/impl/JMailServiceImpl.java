@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -81,6 +83,44 @@ public class JMailServiceImpl implements JMailService{
 		try {
 			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
 			imapFolder.open(Folder.READ_ONLY);
+			Message[] messages = imapFolder.getMessages();
+			for(Message message: messages){
+				System.out.println("=========================");
+				System.out.println(message.getFlags());
+				if (message.isSet(Flags.Flag.DELETED)) {
+					System.out.println("Deleted");
+				}
+				if (message.isSet(Flags.Flag.ANSWERED)) {
+					System.out.println("Answered");
+				}
+				if (message.isSet(Flags.Flag.DRAFT)) {
+			        System.out.println("Draft");
+				}
+				if (message.isSet(Flags.Flag.FLAGGED)) {
+					System.out.println("Marked");
+				}	
+				if (message.isSet(Flags.Flag.RECENT)) {
+					System.out.println("Recent");
+				}
+				if (message.isSet(Flags.Flag.SEEN)) {
+					System.out.println("Read");
+				}
+			     
+				System.out.println(message.getSubject());
+				
+				for(Address addres : message.getFrom() ){
+					System.out.println(addres.getType());
+				}
+				
+				System.out.println(message.getFrom());
+				System.out.println(message.getSentDate());
+				System.out.println(message.getDescription());
+				System.out.println(message.getContentType());
+				System.out.println(message.getMessageNumber());
+				System.out.println(message.getDisposition());
+				System.out.println(message.getSize());
+				System.out.println("=========================");
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -98,6 +138,7 @@ public class JMailServiceImpl implements JMailService{
 			for(Message message: messages){
 				UIDFolder uf = (UIDFolder) imapFolder;
 				long uid = uf.getUID(message);
+				System.out.println(uid);
 				folderUids.add(uid);
 			}			
 		} catch (Exception e) {
@@ -112,6 +153,43 @@ public class JMailServiceImpl implements JMailService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean deleteMessage(String fullFolderName, long[] uids) {
+		IMAPFolder imapFolder = null;
+		try {
+			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
+			imapFolder.open(Folder.READ_WRITE);
+			Message[] messages = imapFolder.getMessagesByUID(uids);
+			imapFolder.setFlags(nonNull(messages), new Flags(Flags.Flag.DELETED), true);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return false;
+		} 
+		return true;
+	}
 	
+	static <T> T nonNull(T argument) {
+		if (argument == null) {
+			throw new IllegalArgumentException("argument cannot be null");
+		}
+		return argument;
+	}
+
+	@Override
+	public boolean setSeenFlag(String fullFolderName, boolean seenFlag, long[] uids) {
+		IMAPFolder imapFolder = null;
+		try {
+			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
+			imapFolder.open(Folder.READ_WRITE);
+			Message[] messages = imapFolder.getMessagesByUID(uids);
+			imapFolder.setFlags(nonNull(messages), new Flags(Flags.Flag.SEEN), seenFlag);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
 	
 }
