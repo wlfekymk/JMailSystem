@@ -1,9 +1,11 @@
 package org.wlfek.service.impl;
 
-import javax.mail.Store;
-
 import org.junit.*;
 import static org.junit.Assert.*;
+
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +22,20 @@ public class JMailServiceImplTest {
 	private JMailServiceImpl jMailService;
 	private String id;
 	private String password;
+	private String fullFolderName;
 	
 	@Before
 	public void init() throws Exception{
-		id = "wlfekymk@gmail.com";
-		password = "@dlfhdia33@";
+		id = "wlfektestmail@gmail.com";
+		password = "@testgmail@";
 		jMailService.getConnection(id, password);
+		
 	}
 	
 	@Test
-	public void getFolderListTest() throws Exception{
-		String[] checkString = {"INBOX", "Junk", "Personal", "Receipts", "Sent", "Travel", "Unwanted", "Work", "[Gmail]", "[Gmail]/별표편지함",
-				"[Gmail]/보낸편지함", "[Gmail]/스팸함", "[Gmail]/임시보관함", "[Gmail]/전체보관함", "[Gmail]/중요", "[Gmail]/휴지통"  };
+	public void getFolderListTest() {
+		String[] checkString = {"INBOX", "[Gmail]", "[Gmail]/별표편지함", "[Gmail]/보낸편지함", "[Gmail]/스팸함",
+				"[Gmail]/임시보관함", "[Gmail]/전체보관함", "[Gmail]/중요", "[Gmail]/휴지통"};
 		String[] result = null;
 		IMAPFolder[] imapFolders = null;
 		imapFolders = jMailService.getFolderList();
@@ -40,25 +44,16 @@ public class JMailServiceImplTest {
 		for(int i = 0 ; i < imapFolders.length; i++){
 			result[i] = imapFolders[i].getFullName();
 		}
-		
 		assertArrayEquals(checkString, result);
-
 	}
-	
 	
 	@Test
-	public void getFolderUidsTest(){
-		
-		try {
-			jMailService.getFolderUids("");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+	public void getFolderUidsTest() {
+		fullFolderName = "[Gmail]/별표편지함"; 
+		List<Long> checkList = Arrays.asList((long)1, (long)2, (long)3);
+		List<Long> result = null; 
+		result = jMailService.getFolderUids(fullFolderName);
+		assertEquals(checkList, result);	
 	}
-	
-	
 		
 }

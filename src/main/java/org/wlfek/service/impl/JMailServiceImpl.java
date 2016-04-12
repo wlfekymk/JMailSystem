@@ -6,6 +6,8 @@
  **/
 package org.wlfek.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Folder;
@@ -62,7 +64,7 @@ public class JMailServiceImpl implements JMailService{
 	}
 
 	@Override
-	public IMAPFolder[] getFolderList() throws Exception{
+	public IMAPFolder[] getFolderList(){
 		
 		IMAPFolder[] imapFolders = null;
 		try {
@@ -74,7 +76,7 @@ public class JMailServiceImpl implements JMailService{
 	}
 	
 	@Override
-	public IMAPFolder getMessageList(String fullFolderName) throws Exception{
+	public IMAPFolder getMessageList(String fullFolderName) {
 		IMAPFolder imapFolder = null;
 		try {
 			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
@@ -86,18 +88,27 @@ public class JMailServiceImpl implements JMailService{
 	}
 	
 	@Override
-	public void getFolderUids(String fullFolderName) throws Exception {
-		IMAPFolder imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
-		Message[] messages = imapFolder.getMessages();
-		for(Message message: messages){
-			UIDFolder uf = (UIDFolder) imapFolder;
-			long uid = uf.getUID(message);
-			System.out.println("UID : " + uid );
+	public List<Long> getFolderUids(String fullFolderName) {
+		IMAPFolder imapFolder = null;
+		List<Long> folderUids = new ArrayList<Long>();
+		try {
+			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
+			imapFolder.open(Folder.READ_ONLY);
+			Message[] messages = imapFolder.getMessages();
+			for(Message message: messages){
+				UIDFolder uf = (UIDFolder) imapFolder;
+				long uid = uf.getUID(message);
+				folderUids.add(uid);
+			}			
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
+		
+		return folderUids;
 	}
 
 	@Override
-	public IMAPFolder getFolder(String fullFolderName) throws Exception {
+	public IMAPFolder getFolder(String fullFolderName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

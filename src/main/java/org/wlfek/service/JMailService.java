@@ -1,5 +1,7 @@
 package org.wlfek.service;
 
+import java.util.List;
+
 import javax.mail.Store;
 
 import com.sun.mail.imap.IMAPFolder;
@@ -20,7 +22,7 @@ public interface JMailService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IMAPFolder[] getFolderList() throws Exception;
+	public IMAPFolder[] getFolderList();
 	
 	/**
 	 *
@@ -28,7 +30,7 @@ public interface JMailService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IMAPFolder getFolder(String fullFolderName) throws Exception;
+	public IMAPFolder getFolder(String fullFolderName);
 	
 	/**
 	 * IMAP 요청 하는 폴더명에 대한 폴더 메시지
@@ -36,9 +38,15 @@ public interface JMailService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IMAPFolder getMessageList(String fullFolderName) throws Exception;
+	public IMAPFolder getMessageList(String fullFolderName);
 	
-	public void getFolderUids(String fullFolderName) throws Exception;
+	/**
+	 * IMAP 요청 하는 폴더의 uid들 검색
+	 * @param fullFolderName
+	 * @return 요청 폴더의 uid list
+	 * @throws Exception
+	 */
+	public List<Long> getFolderUids(String fullFolderName);
 
 	
 
