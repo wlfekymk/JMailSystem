@@ -56,6 +56,15 @@ public interface JMailService {
 	 */
 	public boolean deleteMessage(String fullFolderName, long uids[]);
 	
+	/**
+	 * 메일 읽은 표시 설정 
+	 * @param fullFolderName : 폴더명
+	 * @param seenFlag (true : 읽음, false : 안읽음)
+	 * @param uids : 해당 메일 uid들 
+	 * @return
+	 */
 	public boolean setSeenFlag(String fullFolderName, boolean seenFlag, long uids[]);
-
+	
+	public boolean setAnsweredFlag(String fullFolderName, boolean seenFlag, long uids[]);
+	
 }

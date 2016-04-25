@@ -191,5 +191,20 @@ public class JMailServiceImpl implements JMailService{
 		return true;
 	}
 
+	@Override
+	public boolean setAnsweredFlag(String fullFolderName, boolean seenFlag, long[] uids) {
+		IMAPFolder imapFolder = null;
+		try {
+			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
+			imapFolder.open(Folder.READ_WRITE);
+			Message[] messages = imapFolder.getMessagesByUID(uids);
+			imapFolder.setFlags(nonNull(messages), new Flags(Flags.Flag.ANSWERED), seenFlag);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
 	
 }
