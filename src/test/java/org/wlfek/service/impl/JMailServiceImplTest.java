@@ -32,6 +32,11 @@ public class JMailServiceImplTest {
 		
 	}
 	
+	@Test
+	public void getMessageListTest(){
+		jMailService.getMessageList("INBOX");
+	}
+	
 	//@Test
 	public void getFolderListTest() {
 		String[] checkString = {"INBOX", "[Gmail]", "[Gmail]/별표편지함", "[Gmail]/보낸편지함", "[Gmail]/스팸함",
@@ -47,7 +52,7 @@ public class JMailServiceImplTest {
 		assertArrayEquals(checkString, result);
 	}
 	
-	@Test
+	//@Test
 	public void getFolderUidsTest() {
 		fullFolderName = "[Gmail]/별표편지함"; 
 		List<Long> checkList = Arrays.asList((long)2, (long)3, (long) 6);

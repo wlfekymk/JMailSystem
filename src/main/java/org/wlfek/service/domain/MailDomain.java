@@ -1,25 +1,30 @@
 package org.wlfek.service.domain;
 
-import java.lang.reflect.Array;
-
 import javax.mail.Address;
 
 import lombok.Data;
 
 @Data
 public class MailDomain{
-	private long uid;
-	
-	private int size;
+    private String uid;
+    private int messageNumber;
+    private String folderName;
+    private String korName;
+    private String subject;
+    private String sentDate;
+    private String receivedDate;
+    private String content;
+    private String priority;
+    private String fileInfoBigDate;
 
-	private String subject;
-	private String SendDate;
-	
-	private Address[] from;
-	private Address[] to;
-	private Address[] replayTo;
-	
-	private boolean flagged;
-	
-	
+    private boolean seen;
+    private boolean flagged;
+    private boolean existFile;
+
+    private Address[] to;
+    private Address[] from;
+   
+	private Address[] cc;
+    private Address[] bcc;
+    private Address[] replyTo;
 }

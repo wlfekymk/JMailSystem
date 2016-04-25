@@ -15,13 +15,16 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
+import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wlfek.service.JMailService;
+import org.wlfek.service.domain.MailDomain;
 
 import com.sun.mail.imap.IMAPFolder;
 
@@ -80,51 +83,30 @@ public class JMailServiceImpl implements JMailService{
 	@Override
 	public IMAPFolder getMessageList(String fullFolderName) {
 		IMAPFolder imapFolder = null;
+		
 		try {
 			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
 			imapFolder.open(Folder.READ_ONLY);
 			Message[] messages = imapFolder.getMessages();
 			for(Message message: messages){
-				System.out.println("=========================");
-				System.out.println(message.getFlags());
-				if (message.isSet(Flags.Flag.DELETED)) {
-					System.out.println("Deleted");
-				}
-				if (message.isSet(Flags.Flag.ANSWERED)) {
-					System.out.println("Answered");
-				}
-				if (message.isSet(Flags.Flag.DRAFT)) {
-			        System.out.println("Draft");
-				}
-				if (message.isSet(Flags.Flag.FLAGGED)) {
-					System.out.println("Marked");
-				}	
-				if (message.isSet(Flags.Flag.RECENT)) {
-					System.out.println("Recent");
-				}
-				if (message.isSet(Flags.Flag.SEEN)) {
-					System.out.println("Read");
-				}
-			     
+				MailDomain md = new MailDomain();
+				md.setFrom(message.getFrom());
+				md.setSubject(message.getSubject());
+				md.setMessageNumber(message.getMessageNumber());
+				
 				System.out.println(message.getSubject());
-				
-				for(Address addres : message.getFrom() ){
-					System.out.println(addres.getType());
-				}
-				
-				System.out.println(message.getFrom());
-				System.out.println(message.getSentDate());
-				System.out.println(message.getDescription());
-				System.out.println(message.getContentType());
 				System.out.println(message.getMessageNumber());
-				System.out.println(message.getDisposition());
-				System.out.println(message.getSize());
-				System.out.println("=========================");
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 		return imapFolder;
+	}
+	
+	private MailDomain getMessage(Message message){
+		
+		
+		return null;
 	}
 	
 	@Override
@@ -206,5 +188,57 @@ public class JMailServiceImpl implements JMailService{
 		return true;
 	}
 
+	
+    /**
+     * from 주소를 반환
+     *
+     * @param message
+     * @return
+     * @throws Exception
+     */
+    private InternetAddress[] getFrom(Message message) throws Exception {
+        InternetAddress[] address = (InternetAddress[]) message.getFrom();
+        
+        return getAddressLimit(address, message, "From", 20);
+    }
+    
+    /**
+     * 해당 주소를 반환: 최대 20개
+     *
+     * @param addresses
+     * @param part
+     * @param source
+     * @return
+     * @throws Exception
+     */
+    private InternetAddress[] getAddressLimit(InternetAddress[] addresses, Part part, String source, int limitCount) throws Exception {
+        if (addresses != null) {
+            int count = addresses.length;
+            if (count > limitCount) {
+                count = limitCount;
+            }
+           
+            InternetAddress[] array = new InternetAddress[count];
+      
+            String str = "";
+        
+            for (int i = 0; i < count; i++) {
+                array[i] = (InternetAddress) addresses[i];
+                str = array[i].getPersonal();
+              
+
+//                if (str == null) {
+//                    str = decodingUSACS(part, array[i].getAddress(), source);
+//                    array[i].setAddress(str);
+//                    array[i].setPersonal(str);
+//                } else {                	
+//                    str = decodingUSACS(part, str, source);
+//                    array[i].setPersonal(str);
+//                }
+            }
+            return array;
+        }
+        return null;
+    }
 	
 }
