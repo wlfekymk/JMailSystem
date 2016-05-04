@@ -60,7 +60,8 @@ public class JMailServiceImpl implements JMailService{
 		try {
 			store = session.getStore("imaps");
 			store.connect(MAIL_ADDRESS, MAIL_IP, id, password);
-			logger.debug("IMAP Connection End");
+			logger.info("IMAP Connection End");
+			System.out.println("connection");
 		} catch (Exception e){
 			logger.error(e.getMessage());
 			try { store.close();} 
@@ -83,7 +84,6 @@ public class JMailServiceImpl implements JMailService{
 	@Override
 	public IMAPFolder getMessageList(String fullFolderName) {
 		IMAPFolder imapFolder = null;
-		
 		try {
 			imapFolder = (IMAPFolder) store.getFolder(fullFolderName);
 			imapFolder.open(Folder.READ_ONLY);
@@ -104,8 +104,6 @@ public class JMailServiceImpl implements JMailService{
 	}
 	
 	private MailDomain getMessage(Message message){
-		
-		
 		return null;
 	}
 	
